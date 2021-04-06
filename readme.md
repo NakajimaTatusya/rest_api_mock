@@ -17,6 +17,12 @@
 * MarkupSafe==1.1.1
 * Werkzeug==1.0.1
 
+## 仮想環境
+
+* git clone
+* python -m venv .
+* pip install -r requirements.txt
+
 ## Flask 起動方法
 
 ```cmd
