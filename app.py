@@ -2,12 +2,12 @@
 
 import os
 import sqlite3
-# import werkzeug
+import werkzeug
 import json
 
 from flask import Flask, request, session, g, redirect, url_for, abort, render_template, flash, jsonify
 from contextlib import closing
-# from datetime import datetime
+from datetime import datetime
 
 app = Flask(__name__)
 app.config.from_object(__name__)
@@ -116,3 +116,27 @@ def MakeCheckList():
             return json.dumps(retval, ensure_ascii=False), 500
     else:
         return 'Method Not Allowed.', 405
+
+
+@app.route("/api/upload", methods=['POST'])
+def UploadAnything():
+    if request.method == 'POST':
+        fileBuff = request.files.get('facefile')
+
+        if fileBuff is None:
+            return jsonify({'message': 'Image file required.'}), 400
+        elif 'image/gif' != fileBuff.mimetype and 'image/png' != fileBuff.mimetype and 'image/jpeg' != fileBuff.mimetype:
+            return jsonify({
+                'message':
+                'Request file type is image and extend for gif or png or jpeg.'
+            }), 415
+        filename = fileBuff.filename
+        if '' == filename:
+            return jsonify({'message': 'enter a filename.'}), 415
+
+        saveFileName = datetime.now().strftime("%Y%m%d_%H%M%S_") + werkzeug.utils.secure_filename(filename)
+        fileBuff.save(os.path.join(app.config['UPLOAD_FOLDER'], saveFileName))
+
+        return 'Upload OK.', 200
+
+        # return redirect(url_for('hello'))
