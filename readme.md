@@ -19,20 +19,23 @@
 
 ## 仮想環境
 
-* git clone
-* python -m venv .
-* pip install -r requirements.txt
+```cmd
+git clone
+python -m venv .
+.\Script\activate
+pip install -r requirements.txt
+flask run -h 0.0.0.0
+.\Script\deactivate.bat
+```
 
 ## Flask 起動方法
 
 ```cmd
 REM 環境変数はapp.pyを起動対象にしている場合は不要。
 set FLASK_APP=C:\Users\z00h230862\vscode\workspace\python\virtual_env\robo_con_rest_api\app.py
-\Scripts\Activate
-
+.\Script\activate
 flask run -h 0.0.0.0
-
-\Script\Deactivate
+.\Script\deactivate.bat
 ```
 
 ## bootstrap.sh の説明
