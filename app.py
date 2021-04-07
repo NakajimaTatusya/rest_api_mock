@@ -1,13 +1,13 @@
 # coding: utf-8
 
+import json
 import os
 import sqlite3
 import werkzeug
-import json
 
-from flask import Flask, request, session, g, redirect, url_for, abort, render_template, flash, jsonify
 from contextlib import closing
 from datetime import datetime
+from flask import Flask, request, session, g, redirect, url_for, abort, render_template, flash, jsonify
 
 app = Flask(__name__)
 app.config.from_object(__name__)
@@ -15,8 +15,8 @@ app.config.from_object(__name__)
 app.config.update(
     dict(DATABASE=os.path.join(app.root_path, 'test.db'),
          SECRET_KEY='development key',
-         USERNAME='hoge',
-         PASSWORD='******',
+         USERNAME='John',
+         PASSWORD='TheyLive1988Obey',
          MAX_CONTENT_LENGTH=5 * 1024 * 1024,
          UPLOAD_FOLDER='./upload',
          ALLOWED_EXTENSIONS=set(['png', 'jpg', 'jpeg', 'gif', 'csv'])))
@@ -35,7 +35,6 @@ def init_db():
     schema.sql ファイルを変更することでテストテーブルとデータをカスタマイズ可能
     """
     with closing(connect_db()) as db:
-        # with app.open_resource('schema.sql', 'r') as sqlFile:  日本語が使えない
         with open('schema.sql', 'r', encoding='utf8') as sqlFile:
             db.cursor().executescript(sqlFile.read())
         db.commit()
@@ -93,12 +92,6 @@ def MakeCheckList():
         list_remake_flag = int(rqjson['ListRemakeFlag'])
         dbconn = connect_db()
 
-        # ecoh_back = {'Osno': None, 'KouteiNo': None, 'ListRenakeFlag': None}
-        # ecoh_back['Osno'] = osno
-        # ecoh_back['KouteiNo'] = koutei_no
-        # ecoh_back['ListRenakeFlag'] = list_remake_flag
-        # return json.dumps(ecoh_back, ensure_ascii=False), 200
-
         rescode: int = 0
         for row in dbconn.execute('SELECT * FROM checklist WHERE Osno=? AND KouteiNo=? AND ListRemakeFlag=?', (osno, koutei_no, list_remake_flag)):
             retval['Result'] = row[3]
@@ -134,9 +127,9 @@ def UploadAnything():
         if '' == filename:
             return jsonify({'message': 'enter a filename.'}), 415
 
-        saveFileName = datetime.now().strftime("%Y%m%d_%H%M%S_") + werkzeug.utils.secure_filename(filename)
+        saveFileName = datetime.now().strftime("%Y%m%d_%H%M%S_") + \
+            werkzeug.utils.secure_filename(filename)
         fileBuff.save(os.path.join(app.config['UPLOAD_FOLDER'], saveFileName))
 
         return 'Upload OK.', 200
-
         # return redirect(url_for('hello'))
