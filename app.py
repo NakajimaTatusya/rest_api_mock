@@ -143,7 +143,7 @@ def UploadAnything():
 
 @app.route("/streamtest", methods=['GET'])
 def stream():
-    def g():
+    def CommandStdout():
         # yield "<!doctype html><title>Stream subprocess output</title>"
 
         with Popen([sys.executable or 'python', '-u', '-c', dedent("""\
@@ -157,7 +157,7 @@ def stream():
                 # yield "<p>{}</p>".format(html.escape(line.rstrip("\n")))
                 yield line
                 yield "<br>\n"
-    return Response(g(), mimetype='text/html')
+    return Response(CommandStdout(), mimetype='text/html')
 
 
 @app.route("/streamtestpage", methods=["GET"])
