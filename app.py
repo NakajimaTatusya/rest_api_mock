@@ -1,13 +1,19 @@
 # coding: utf-8
 
+import html
 import json
 import os
 import sqlite3
+import sys
+from subprocess import Popen, PIPE, STDOUT, DEVNULL
+from types import MethodDescriptorType
+from flask.wrappers import Response
 import werkzeug
 
 from contextlib import closing
 from datetime import datetime
 from flask import Flask, request, session, g, redirect, url_for, abort, render_template, flash, jsonify
+from textwrap import dedent
 
 app = Flask(__name__)
 app.config.from_object(__name__)
@@ -133,3 +139,27 @@ def UploadAnything():
 
         return 'Upload OK.', 200
         # return redirect(url_for('hello'))
+
+
+@app.route("/streamtest", methods=['GET'])
+def stream():
+    def g():
+        # yield "<!doctype html><title>Stream subprocess output</title>"
+
+        with Popen([sys.executable or 'python', '-u', '-c', dedent("""\
+            import time
+            for i in range(1, 51):
+                print(i)
+                time.sleep(.1)
+                """)], stdin=DEVNULL, stdout=PIPE, stderr=STDOUT,
+                   bufsize=1, universal_newlines=True) as p:
+            for line in p.stdout:
+                # yield "<p>{}</p>".format(html.escape(line.rstrip("\n")))
+                yield line
+                yield "<br>\n"
+    return Response(g(), mimetype='text/html')
+
+
+@app.route("/streamtestpage", methods=["GET"])
+def streamtest():
+    return render_template('stream_output.html')

@@ -1,0 +1,26 @@
+{% extends "leyout.html" %}
+{% block body %}
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-3" style="height:400px;">
+                <div>
+                    <p>
+                        <button id="run" type="button" class="btn btn-primary">Play - Confirm Connection</button>
+                    </p>
+                </div>
+                <div>
+                    <p>
+                        <button id="run2" type="button" class="btn btn-primary">Play - Basic Setting</button>
+                    </p>
+                </div>
+                <div>
+                    <p>
+                        <button id="run3" type="button" class="btn btn-primary">Play - Windows Update</button>
+                    </p>
+                </div>
+            </div>
+            <div class="col-sm-9" id="output_result" style="height:400px;border: 1px solid #0004ff;font: 16px/26px Georgia, Garamond, Serif;overflow: auto;">
+            </div>
+        </div>
+    </div>
+{% endblock %}
