@@ -144,8 +144,6 @@ def UploadAnything():
 @app.route("/streamtest", methods=['GET'])
 def stream():
     def CommandStdout():
-        # yield "<!doctype html><title>Stream subprocess output</title>"
-
         with Popen([sys.executable or 'python', '-u', '-c', dedent("""\
             import time
             for i in range(1, 51):
